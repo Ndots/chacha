@@ -1,0 +1,84 @@
+chacha/
+│── backend/
+│   ├── main.go
+│   ├── database/
+│   │   ├── connection.go
+│   │   ├── migrations.go
+│   ├── models/
+│   │   ├── user.go
+│   │   ├── business.go
+│   │   ├── application.go
+│   │   ├── director.go
+│   │   ├── partner.go
+│   │   ├── dashboard.go
+│   ├── handlers/
+│   │   ├── auth.go
+│   │   ├── business.go
+│   │   ├── application.go
+│   │   ├── dashboard.go
+│   │   ├── partner.go
+│   ├── routes/
+│   │   ├── routes.go
+│   ├── utils/
+│   │   ├── logger.go
+│   │   ├── hash.go
+│   ├── config/
+│   │   ├── config.go
+│   ├── Dockerfile
+│   ├── go.mod
+│   ├── go.sum
+│
+│── frontend/
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── DashboardCard.tsx
+│   ├── pages/
+│   │   ├── index.tsx
+│   │   ├── register.tsx
+│   │   ├── login.tsx
+│   │   ├── dashboard/
+│   │   │   ├── index.tsx
+│   │   │   ├── business.tsx
+│   │   │   ├── applications.tsx
+│   │   │   ├── admin.tsx
+│   │   │   ├── partner.tsx
+│   ├── services/
+│   │   ├── api.ts
+│   ├── utils/
+│   │   ├── auth.ts
+│   ├── styles/
+│   │   ├── globals.css
+│   ├── Dockerfile
+│   ├── next.config.js
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│
+│── docker-compose.yml
+│── README.md
+
+
+prioritized file structure:
+
+chacha/
+├── backend/
+│   ├── internal/
+│   │   ├── models/
+│   │   │   ├── user.go         # User model with roles
+│   │   │   ├── business.go     # Business + names
+│   │   │   └── director.go     # Director relationships
+│   │   ├── handlers/
+│   │   │   ├── business.go     # Business registration logic
+│   │   │   └── partner.go      # Approval workflows
+│   │   └── routes/
+│   │       └── api.go          # Route definitions
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── BusinessForm/   # Multi-step form
+│   │   └── pages/
+│   │       ├── dashboard/      # Role-based views
+│   │       └── partner/        # Approval interface
+└── docker/
+    └── postgres/               # DB configs

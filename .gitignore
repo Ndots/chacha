@@ -1,0 +1,41 @@
+# Go build artifacts
+/bin/
+/pkg/
+
+# Go modules
+/go.sum
+/go.mod
+
+# Environment files
+.env
+
+# Log files
+*.log
+
+# IDE/editor files
+.vscode/
+.idea/
+
+# Database
+*.db
+*.sql
+EOT
+
+
+# Node modules for frontend
+/frontend/node_modules/
+
+# Build output for frontend
+/frontend/.next/
+frontend/out/
+
+# npm debug logs
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# Docker files (optional if you want to track Dockerfiles)
+/docker-compose.yml
+
+# Temporary files
+*.swp

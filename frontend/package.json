@@ -1,0 +1,22 @@
+{
+    "name": "chacha-frontend",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "@tanstack/react-query": "latest",
+        "axios": "latest",
+        "next": "latest",
+        "react": "latest",
+        "react-dom": "latest",
+        "tailwindcss": "latest"
+    },
+    "devDependencies": {
+        "@types/node": "22.13.0",
+        "@types/react": "19.0.8",
+        "typescript": "5.7.3"
+    }
+}
