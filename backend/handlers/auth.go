@@ -1,14 +1,21 @@
 package handlers
 
 import (
-	"encoding/json"
-	"net/http"
-
 	"chacha/backend/database"
 	"chacha/backend/models"
 	"chacha/backend/utils"
+	"encoding/json"
+	"net/http"
+	//"os"
+	"time"
+
+	"github.com/golang-jwt/jwt"
 	//"log"
 )
+
+//var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+// If JWT_SECRET is not set in your environment, you can temporarily set a default for development:
+var jwtSecret = []byte("my-secret123")
 
 type LoginRequest struct {
 	Email    string `json:"email"`
@@ -20,6 +27,7 @@ type LoginResponse struct {
 	User  models.User `json:"user"`
 }
 
+// RegisterUser creates a new user and persists it to the database.
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	db := database.ConnectDB()
 	defer db.Close()
@@ -43,10 +51,14 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.Log("User registered: " + user.Email)
+
+	// Remove the password before returning the response
+	user.Password = ""
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(user)
 }
 
+// LoginUser authenticates the user and returns a JWT token upon successful login.
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	db := database.ConnectDB()
 	defer db.Close()
@@ -68,10 +80,24 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For development, we return a dummy token.
-	token := "dummy-token"
+	// Create a JWT token valid for 72 hours.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"email":   user.Email,
+		"role":    user.Role,
+		"exp":     time.Now().Add(72 * time.Hour).Unix(),
+	})
+
+	tokenString, err := token.SignedString(jwtSecret)
+	if err != nil {
+		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		return
+	}
+
+	// Remove password before sending user data in response.
+	user.Password = ""
 	res := LoginResponse{
-		Token: token,
+		Token: tokenString,
 		User:  *user,
 	}
 	json.NewEncoder(w).Encode(res)
