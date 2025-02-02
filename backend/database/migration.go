@@ -20,21 +20,18 @@ func RunMigrations(db *sql.DB) error {
 		// Businesses table
 		`CREATE TABLE IF NOT EXISTS businesses (
 			id SERIAL PRIMARY KEY,
-			name TEXT NOT NULL,
-			address TEXT,
-			type TEXT,
-			proposed_names TEXT[],
-			status TEXT NOT NULL DEFAULT 'Pending',
-			user_id INT REFERENCES users(id),
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+			name VARCHAR(255) NOT NULL,
+			address TEXT NOT NULL,
+			type VARCHAR(100) NOT NULL,
+			email VARCHAR(255) NOT NULL,
+			phone VARCHAR(20) NOT NULL,
+			directors JSONB NOT NULL DEFAULT '[]'::jsonb,
+			status VARCHAR(50) NOT NULL DEFAULT 'pending',
+			user_id INTEGER REFERENCES users(id),
+			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+			updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 		);`,
-		// Directors table
-		`CREATE TABLE IF NOT EXISTS directors (
-			id SERIAL PRIMARY KEY,
-			business_id INT REFERENCES businesses(id),
-			name TEXT NOT NULL,
-			email TEXT UNIQUE NOT NULL
-		);`,
+		// Directors table --- optional
 		// Partners table
 		`CREATE TABLE IF NOT EXISTS partners (
 			id SERIAL PRIMARY KEY,

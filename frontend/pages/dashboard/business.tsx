@@ -4,30 +4,40 @@ import Footer from '../../components/Footer'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
+interface Director {
+  name: string
+  email: string
+  position: string
+}
+
 const BusinessRegistration = () => {
   const router = useRouter()
-  const [form, setForm] = useState({
+  const [directors, setDirectors] = useState<Director[]>([{ name: '', email: '', position: '' }])
+  const [formData, setFormData] = useState({
     name: '',
     address: '',
     type: '',
-    proposedNames: ['', '', ''],
-    userId: 1 // Replace with actual user ID from auth context
+    email: '',
+    phone: '',
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+  const addDirector = () => {
+    setDirectors([...directors, { name: '', email: '', position: '' }])
   }
 
-  const handleProposedNameChange = (index: number, value: string) => {
-    const updatedNames = [...form.proposedNames]
-    updatedNames[index] = value
-    setForm({ ...form, proposedNames: updatedNames })
+  const updateDirector = (index: number, field: keyof Director, value: string) => {
+    const newDirectors = [...directors]
+    newDirectors[index][field] = value
+    setDirectors(newDirectors)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      await axios.post('/api/business', form)
+      await axios.post('http://localhost:8080/api/business', {
+        ...formData,
+        directors,
+      })
       router.push('/dashboard')
     } catch (error) {
       console.error('Error registering business:', error)
@@ -42,27 +52,93 @@ const BusinessRegistration = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label>Business Name</label>
-            <input name="name" type="text" value={form.name} onChange={handleChange} className="border p-2 w-full" required />
+            <input
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="border p-2 w-full"
+              required
+            />
           </div>
           <div>
             <label>Address</label>
-            <input name="address" type="text" value={form.address} onChange={handleChange} className="border p-2 w-full" required />
+            <input
+              name="address"
+              type="text"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              className="border p-2 w-full"
+              required
+            />
           </div>
           <div>
             <label>Type</label>
-            <input name="type" type="text" value={form.type} onChange={handleChange} className="border p-2 w-full" required />
+            <input
+              name="type"
+              type="text"
+              value={formData.type}
+              onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="border p-2 w-full"
+              required
+            />
           </div>
           <div>
-            <label>Proposed Name 1</label>
-            <input type="text" value={form.proposedNames[0]} onChange={(e) => handleProposedNameChange(0, e.target.value)} className="border p-2 w-full" required />
+            <label>Email</label>
+            <input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="border p-2 w-full"
+              required
+            />
           </div>
           <div>
-            <label>Proposed Name 2</label>
-            <input type="text" value={form.proposedNames[1]} onChange={(e) => handleProposedNameChange(1, e.target.value)} className="border p-2 w-full" required />
+            <label>Phone</label>
+            <input
+              name="phone"
+              type="text"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              className="border p-2 w-full"
+              required
+            />
           </div>
-          <div>
-            <label>Proposed Name 3</label>
-            <input type="text" value={form.proposedNames[2]} onChange={(e) => handleProposedNameChange(2, e.target.value)} className="border p-2 w-full" required />
+          <div className="space-y-4">
+            <h3>Directors</h3>
+            {directors.map((director, index) => (
+              <div key={index} className="space-y-2">
+                <input
+                  type="text"
+                  placeholder="Director Name"
+                  value={director.name}
+                  onChange={(e) => updateDirector(index, 'name', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="email"
+                  placeholder="Director Email"
+                  value={director.email}
+                  onChange={(e) => updateDirector(index, 'email', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Position"
+                  value={director.position}
+                  onChange={(e) => updateDirector(index, 'position', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addDirector}
+              className="bg-gray-200 px-4 py-2 rounded"
+            >
+              Add Another Director
+            </button>
           </div>
           <button type="submit" className="bg-blue-600 text-white p-2 rounded">Register Business</button>
         </form>

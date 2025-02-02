@@ -43,3 +43,11 @@ Chacha is a web platform designed for business registration. It allows users to:
 
 #### on first run uncomment this line in main.go
 //  seeds.Seed()
+
+### creating  a user from  console
+curl -X POST http://localhost:8080/api/register -H "Content-Type: application/json" -d '{"name": "Test User2", "email": "test2@example.com", "password": "password", "address": "123 Street"}'
+
+### set env variables in shell or .env
+
+export JWT_SECRET="your-development-secret"
+
